@@ -1,76 +1,261 @@
-body{
-    background-color: rgb(209, 201, 201);
+body {
+    height: 100vh;
+    background-color: rgb(179, 179, 182, .6);
+    background-image: url(./img/fundo.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow-y: hidden;
 }
 
-.cabecalho{
+/* ----------- CABEÇALHO ----------- */
+
+.cabecalho {
+    font-family: 'Tilt Warp', cursive;
+    width: 100vw;
+    color: #2badf3;
     padding: 20px;
+    backdrop-filter: blur(4px);
     text-align: center;
-    border: solid black;
-    
 }
 
-.nav_tabs ul{
+.cabecalho span {
+    color: #d66d79;
+}
+
+/* ----------- TABS ----------- */
+
+.navTabs {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+
+.navTabs ul {
+    padding: 0;
+    margin: 0;
     list-style: none;
-    background-color: aqua;
     display: grid;
     grid-template-columns: auto auto;
-    justify-content: space-evenly;
 }
 
-.nav_lab{
-    padding: 20px;
-    font-size: 20px;
-    background-color: green;
+.navTabs li {
+    text-align: center;
+    margin-right: 10px;
+}
+
+.rdTabs {
+    display: none;
+}
+
+.navTabs label {
+    width: 100%;
+    padding: 5px;
     display: inline-block;
-    color: white;
     cursor: pointer;
 }
 
+.navTabs .corPendentes,
+.corConcluidas,
+.btnAdd {
+    border-radius: 10px;
+    font-size: 20px;
+}
 
+.corPendentes,
+.corConcluidas,
+.btnAdd {
+    font-weight: 500;
+    background-color: gray;
+    transition: 0.5s;
+    border: none;
+}
 
+.rdTabs:checked~.corPendentes {
+    background-color: rgb(255, 255, 100);
+    transition: 0.5s;
+}
 
+.rdTabs:checked~.corConcluidas {
+    background-color: rgb(50, 255, 50);
+    transition: 0.5s;
+}
 
+.btnAdd:hover {
+    background-color: rgb(0, 150, 255);
+    transition: 0.5s;
+}
 
+/* ----------- CARDS TAREFAS ----------- */
 
+.containerRolagem{
+    height: calc(100vh - 270px);
+    overflow-y: scroll;
+}
 
-.conteudo{
-    background-color: red;
+.containerRolagem::-webkit-scrollbar {
+    width: 0 ! important
+}
+
+.conteudo {
+    padding: 0;
+    margin-top: 30px;
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
 }
 
-.card-tarefa{
+.cardTarefa {
     border-left: 6px solid blue;
     background-color: white;
     margin: 10px;
     padding: 10px 15px;
     border-radius: 20px;
+    display: grid;
+    position: relative;
 }
 
-.card-tarefa h4{
+.cardTarefa h4 {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 900;
     text-align: center;
 }
 
-.card-tarefa p{
+.cardTarefa h4 + p {
+    font-family: 'Roboto Mono', monospace;
+    margin-bottom: 60px;
+}
+
+.cardTarefa p {
     text-align: justify;
 }
 
-.opcoes-card{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
+.textoTarefa{
+    margin-bottom: 50px;
 }
 
-.cursor{
+.opcoesCard {
+    font-weight: 500;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    margin-top: 30px;
+    position: absolute;
+    left: 0;
+    bottom: 10px;
+}
+
+#feito ~ label{
+    color: green;
+}
+
+#excluir{
+    color: red;
+} 
+
+.cursor {
     cursor: pointer;
 }
 
-#data{
+#data {
     background-color: green;
     color: white;
     font-weight: 700;
     border-radius: 5px;
-    padding: 0 10px;   
+    padding: 0 10px;
+}
+
+/* ----------- JANELA MODAL ----------- */
+
+.janelaModal {
+    font-family: 'Roboto Mono', monospace;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+.janelaModal h4{
+    font-weight: 900;
+}
+
+.abreModal {
+    display: flex;
+}
+
+.modalTarefa {
+    border: white;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.btnCancelar {
+    background-color: rgba(255, 0, 0, 0.39);
+}
+
+.btnCancelar:hover {
+    background-color: rgb(233, 53, 53);
+}
+
+.btnSalvar {
+    background-color: rgba(20, 235, 92, 0.425);
+}
+
+.btnSalvar:hover {
+    background-color: rgb(44, 202, 97);
+}
+
+.btnModal {
+    transition: 0.8s;
+}
+
+/* ----------- REPONSIVIDADE ----------- */
+
+@media screen and (max-width: 1200px) {
+    .conteudo {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 770px) {
+    .conteudo {
+        grid-template-columns: auto;
+    }
+}
+
+@media screen and (max-width: 450px) {
+
+    .cabecalho{
+        margin-bottom:10px;
+    }
+
+    .navTabs .corPendentes, .corConcluidas, .btnAdd {
+        font-size: 15px;
+    }
+
+    .cardTarefa {
+        font-size: 15px;
+    }
+
+    .cardTarefa h4 + p {
+        margin-bottom: 100px;
+    }
+
+    .opcoesCard {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-items: center;
+        margin-top: 30px;
+    }
+
+    .opcoesCard #data{
+        grid-column: 1 / 3;
+    }
 }
