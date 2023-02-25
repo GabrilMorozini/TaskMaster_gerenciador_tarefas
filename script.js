@@ -36,8 +36,6 @@ function valoresInputModal() {
     addTituloTarefa = document.getElementById("txtTitulo").value;
 
     addDataTarefa = document.getElementById("dataTarefa").value;
-    // data = new Date(addDataTarefa);
-    // dataFormatada = data.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
 
     addConteudoTarefa = document.getElementById("txtTarefa").value;
 }
@@ -95,8 +93,8 @@ function listarTarefas(e) {
             lista = dadosPendentes[i];
             data = new Date(lista.data);
             dataFormatada = data.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-            numtarefa++
             criarDivTarefas();
+            numtarefa++
         }
     }
 }
@@ -104,14 +102,13 @@ function listarTarefas(e) {
 function criarDivTarefas() {
     containerTarefa = document.getElementById("conteudoTarefa");
     containerTarefa.innerHTML +=
-        `<div class="cardTarefa" data-numtarefa="${numtarefa}">
+        `<div class="cardTarefa"">
         <h4 class="mb-4" id="tituloCard">${lista.titulo}</h4>
         <p>${lista.conteudo}</p>
         <div class="opcoesCard" >
             <div class="form-check d-inline-block cursor">
-                <input class="form-check-input cursor" type="checkbox"
-                id="concluida${numtarefa}" data-numtarefa="${numtarefa}" class="ok">
-                <label class="form-check-label cursor">Concluída</label>
+                <input class="form-check-input cursor" id="concluida${numtarefa}" type="checkbox" data-numtarefa="${numtarefa}">
+                <label for="concluida${numtarefa}" class="form-check-label cursor">Concluída</label>
             </div>
             <p class="d-inline-block cursor" id="excluir"><i class="bi-trash"></i> Excluir</p>
             <p id="data">${dataFormatada}</p>
@@ -119,33 +116,41 @@ function criarDivTarefas() {
     </div>`;
 }
 
-
-// function tarefaConcluida(){
-
-// }
-
-try{
-    var checkConcluida = document.getElementsByClassName("ok")
-    checkConcluida.addEventListener("change", marcarConcluida)
+try {
+    var checkConcluida = document.getElementById("conteudoTarefa")
+    checkConcluida.addEventListener("click", identificaTarefa)
 }
-catch (err){
+catch (err) {
 
 }
+
+function identificaTarefa(e) {
+    let tarefaAlvo = e.target;
+    numArrayTarefa = tarefaAlvo.dataset.numtarefa
+
+    if (e.target.checked) {
+        console.log("check")
+    }
+    else if(e.target.id == "excluir"){
+        let tarefaAlvo = e.target;
+        numArrayTarefa = tarefaAlvo.dataset.numtarefa
+        excluirTarefa(numArrayTarefa)
+        console.log(numArrayTarefa)
+    }
+}
+
+function excluirTarefa(numArrayTarefa){
+    console.log("entrou")
+    bd_pendentes.slice(numArrayTarefa, 1)
+}
+
 
 // var teste = document.getElementsByClassName("cardTarefa")
 // var atributo = teste[1]
 // console.log(atributo.getAttribute("data-numtarefa"))
 
-function marcarConcluida(e){
-    if(checkConcluida.checked){
-        console.log(this.dataset.numtarefa)
 
 
-    }
-    else{
-        console.log("Não marcado")
-    }
-}
 
 // var dadosPendentes = pegarLocalStorage("bd_pendentes");
 // for (i in dadosPendentes) {
