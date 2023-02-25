@@ -15,6 +15,7 @@
         href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500;700&family=Roboto:wght@400;900&family=Tilt+Warp&display=swap"
         rel="stylesheet">
     <link rel="icon" href="./img/icone.png" type="image/png">
+    <script src="./script.js" defer></script>
     <title>TaskMaster</title>
 </head>
 
@@ -48,21 +49,7 @@
     <!------- CONTEÚDO ------->
     <main>
         <div class="containerRolagem mt-2 mt-sm-4">
-            <div class="container conteudo">
-                <div class="cardTarefa">
-                    <h4 class="mb-4">Comprar Arroz lore</h4>
-                    <p>ir no mercado Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque minima iure
-                        sequi explicabo quod veritatis laborum odio doloribus! Pariatur, commodi aperiam. Atque a quia
-                        earum ut nobis velit voluptatem incidunt.</p>
-                    <div class="opcoesCard">
-                        <div class="form-check d-inline-block cursor">
-                            <input class="form-check-input cursor" type="checkbox" name="feito" id="feito">
-                            <label class="form-check-label cursor" for="feito">Concluída</label>
-                        </div>
-                        <p class="d-inline-block cursor" id="excluir"><i class="bi-trash"></i> Excluir</p>
-                        <p id="data">12/05/2023</p>
-                    </div>
-                </div>
+            <div id="conteudoTarefa" class="container conteudo">
             </div>
         </div>
     </main>
@@ -71,23 +58,32 @@
     <div class="janelaModal" id="janelaModal">
         <div class="modalTarefa text-center p-3 col-11 col-md-8 col-xl-7">
             <h4 class="mb-4">ADICIONANDO UMA NOVA TAREFA...</h4>
-            <div class="d-inline-block col-11 col-sm-11 col-md-7 col-lg-8 mb-3">
-                <label class="form-label" for="txtTitulo">Título</label>
-                <input type="text" class="form-control" id="txtTitulo">
-            </div>
-            <div class="d-inline-block col-11 col-sm-11 col-md-4 col-lg-3 mb-3">
-                <label class="form-label" for="dataTarefa">Data</label>
-                <input type="date" class="form-control" id="dataTarefa" min="!today">
-            </div>
-            <div class="mx-auto col-11">
-                <label class="form-label" for="txtTarefa">Digite a tarefa</label>
-                <textarea class="form-control col-11" id="txtTarefa" rows="3"></textarea>
-            </div>
-            <button class="btn btnModal btnCancelar mt-3" id="cancelar">CANCELAR</button>
-            <button class="btn btnModal btnSalvar mt-3">SALVAR</button>
+            <form>
+                <div class="d-inline-block col-11 col-sm-11 col-md-7 col-lg-8 mb-3">
+                    <label class="form-label" for="txtTitulo">Título</label>
+                    <input type="text" class="form-control" id="txtTitulo">
+                </div>
+                <div class="d-inline-block col-11 col-sm-11 col-md-4 col-lg-3 mb-3">
+                    <label class="form-label" for="dataTarefa">Data</label>
+                    <input type="date" class="form-control" id="dataTarefa" min="!today">
+                </div>
+                <div class="mx-auto col-11">
+                    <label class="form-label" for="txtTarefa">Digite a tarefa</label>
+                    <textarea class="form-control col-11" id="txtTarefa" rows="3"></textarea>
+                </div>
+                <button class="btn btnModal btnCancelar mt-3" id="cancelar">CANCELAR</button>
+                <button type="reset" class="btn btnModal btnLimpar mt-3">LIMPAR</button>
+                <button type="reset" class="btn btnModal btnSalvar mt-3" id="salvar">SALVAR</button>
+            </form>
+            
         </div>
     </div>
-    <script src="./script.js"></script>
+
+
+
+
+
+
 </body>
 
 </html>

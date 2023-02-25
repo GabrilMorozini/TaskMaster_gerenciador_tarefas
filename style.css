@@ -113,6 +113,7 @@ body {
     border-radius: 20px;
     display: grid;
     position: relative;
+    word-break: break-word;
 }
 
 .cardTarefa h4 {
@@ -210,6 +211,15 @@ body {
 
 .btnSalvar:hover {
     background-color: rgb(44, 202, 97);
+}
+
+.btnLimpar {
+    background-color: rgba(255, 255, 0, 0.425);
+
+}
+
+.btnLimpar:hover {
+    background-color: rgb(255, 255, 0);
 }
 
 .btnModal {
