@@ -1,34 +1,41 @@
 const bd_pendentes = pegarLocalStorage("bd_pendentes");
+const bd_concluidas = pegarLocalStorage("bd_concluidas");
 
-
-listarTarefas("listarPendentes");
+const containerTarefa = document.getElementById("conteudoTarefa");
 
 const btnSalvar = document.getElementById("salvar");
 btnSalvar.addEventListener("click", criarTarefa);
-btnSalvar.addEventListener("click", salvaFechaModal)
+btnSalvar.addEventListener("click", salvaFechaModal);
 
-function salvaFechaModal() {
-    if (bd_pendentes.length == 1) {
-        window.location.reload()
-    }
+const tab1 = document.getElementById("tab1");
+tab1.addEventListener("click", identificaTabs);
 
-    else {
-        if (tab2.checked) {
+const tab2 = document.getElementById("tab2");
+tab2.addEventListener("click", identificaTabs);
 
-        }
 
-        else {
-            containerTarefa.innerHTML = "";
-            listarTarefas("listarPendentes")
-        }
-    }
+// LISTA AS TAREFAS PENDENTES ASSIM QUE A PÁGINA CARREGA
+listarTarefas("listarPendentes");
+
+// LOCAL STORAGE
+function salvarLocalStorage(chave, bd_array) {
+    localStorage.setItem(chave, JSON.stringify(bd_array));
 }
 
+function pegarLocalStorage(chave) {
+    return JSON.parse(localStorage.getItem(chave)) ?? [];
+}
+
+// APAGA TODO O CONTEÚDO DA PÁGINA ANTES DE LISTAR NOVAMENTE 
+function esvaziaConteudo() {
+    containerTarefa.innerHTML = "";
+}
+
+// CRIAR TAREFAS 
 function criarTarefa() {
     valoresInputModal();
     novaTarefa(addTituloTarefa, addConteudoTarefa, addDataTarefa);
-    organizarPorData()
-
+    organizarPorData(bd_pendentes);
     salvarLocalStorage("bd_pendentes", bd_pendentes);
 }
 
@@ -41,49 +48,64 @@ function valoresInputModal() {
 }
 
 function novaTarefa(titulo, conteudo, data) {
-    bd_pendentes.push({ titulo, conteudo, data })
+    bd_pendentes.push({ titulo, conteudo, data });
 }
 
-function organizarPorData() {
-    bd_pendentes.sort(function (a, b) {
+function organizarPorData(bd) {
+    bd.sort(function (a, b) {
         if (a.data < b.data) {
-            return -1
+            return -1;
         }
         else {
-            return true
+            return true;
         }
     })
 }
 
-function salvarLocalStorage(chave, bd_array) {
-    localStorage.setItem(chave, JSON.stringify(bd_array))
-}
-
-function pegarLocalStorage(chave) {
-    return JSON.parse(localStorage.getItem(chave)) ?? [];
-}
-
-var tab1 = document.getElementById("tab1");
-var tab2 = document.getElementById("tab2");
-
-tab1.addEventListener("click", identificaTabs);
-tab2.addEventListener("click", identificaTabs);
-
-function identificaTabs(e) {
-    containerTarefa.innerHTML = "";
-
-    if (e.target.id == "tab2") {
-        listarTarefas("listarConcluidas")
+function salvaFechaModal() {
+    if (bd_pendentes.length == 1) {
+        window.location.reload();
     }
 
     else {
-        listarTarefas("listarPendentes")
+        if (tab2.checked) {
+            esvaziaConteudo();
+            listarTarefas("listarConcluidas");
+        }
+
+        else {
+            esvaziaConteudo();
+            listarTarefas("listarPendentes");
+        }
     }
 }
 
+// IDENTIFICA QUAL TAB ESTA SELECIONADA 
+function identificaTabs(e) {
+    esvaziaConteudo();
+
+    if (e.target.id == "tab2") {
+        listarTarefas("listarConcluidas");
+    }
+
+    else {
+        listarTarefas("listarPendentes");
+    }
+}
+
+
+// LISTAR TAREFAS
 function listarTarefas(e) {
     if (e == "listarConcluidas") {
-        console.log("concluiu")
+        let dadosConcluidas = pegarLocalStorage("bd_concluidas");
+        numtarefa = 0;
+        for (i in dadosConcluidas) {
+            lista = dadosConcluidas[i];
+            let data = new Date(lista.data);
+            dataFormatada = data.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+            criarDivTarefas();
+            numtarefa++;
+        }
     }
 
     else {
@@ -91,18 +113,33 @@ function listarTarefas(e) {
         numtarefa = 0;
         for (i in dadosPendentes) {
             lista = dadosPendentes[i];
-            data = new Date(lista.data);
+            let data = new Date(lista.data);
             dataFormatada = data.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
             criarDivTarefas();
-            numtarefa++
+            numtarefa++;
+        }
+    }
+
+    marcarCheck()
+}
+
+function marcarCheck() {
+    if (tab2.checked) {
+        for (i = 0; i <= bd_concluidas.length; i++) {
+            let marcarCheck = document.getElementById(`concluida${i}`);
+            try {
+                marcarCheck.checked = true;
+            }
+            catch (err) {
+
+            }
         }
     }
 }
 
 function criarDivTarefas() {
-    containerTarefa = document.getElementById("conteudoTarefa");
     containerTarefa.innerHTML +=
-        `<div class="cardTarefa"">
+        `<div class="cardTarefa">
         <h4 class="mb-4" id="tituloCard">${lista.titulo}</h4>
         <p>${lista.conteudo}</p>
         <div class="opcoesCard" >
@@ -110,15 +147,16 @@ function criarDivTarefas() {
                 <input class="form-check-input cursor" id="concluida${numtarefa}" type="checkbox" data-numtarefa="${numtarefa}">
                 <label for="concluida${numtarefa}" class="form-check-label cursor">Concluída</label>
             </div>
-            <p class="d-inline-block cursor" id="excluir"><i class="bi-trash"></i> Excluir</p>
+            <p class="d-inline-block cursor" id="excluir" data-numtarefa="${numtarefa}"><i class="bi-trash" id="iconExcluir"></i> Excluir</p>
             <p id="data">${dataFormatada}</p>
         </div>
     </div>`;
 }
 
+// IDENTIFICAÇÃO DAS TAREFAS E AÇÕES 
 try {
-    var checkConcluida = document.getElementById("conteudoTarefa")
-    checkConcluida.addEventListener("click", identificaTarefa)
+    const identTarefa = document.getElementById("conteudoTarefa");
+    identTarefa.addEventListener("click", identificaTarefa);
 }
 catch (err) {
 
@@ -126,50 +164,67 @@ catch (err) {
 
 function identificaTarefa(e) {
     let tarefaAlvo = e.target;
-    numArrayTarefa = tarefaAlvo.dataset.numtarefa
 
-    if (e.target.checked) {
-        console.log("check")
+    if (e.target.tagName == "INPUT") {
+        if (e.target.checked) {
+            numArrayTarefa = tarefaAlvo.dataset.numtarefa;
+            concluirTarefa(numArrayTarefa);
+        }
+        else {
+            numArrayTarefa = tarefaAlvo.dataset.numtarefa;
+            tornarPendente(numArrayTarefa);
+        }
     }
-    else if(e.target.id == "excluir"){
-        let tarefaAlvo = e.target;
-        numArrayTarefa = tarefaAlvo.dataset.numtarefa
-        excluirTarefa(numArrayTarefa)
-        console.log(numArrayTarefa)
+    else if (e.target.id == "excluir" || e.target.id == "iconExcluir") {
+        numArrayTarefa = tarefaAlvo.dataset.numtarefa;
+        excluirTarefa(numArrayTarefa);
     }
 }
 
-function excluirTarefa(numArrayTarefa){
-    console.log("entrou")
-    bd_pendentes.slice(numArrayTarefa, 1)
+function concluirTarefa(indexTarefa) {
+    let arrayTarefaConcluida = bd_pendentes.splice(indexTarefa, 1);
+    let objConcluido = arrayTarefaConcluida[0];
+    let titulo = objConcluido.titulo;
+    let conteudo = objConcluido.conteudo;
+    let data = objConcluido.data;
+    bd_concluidas.push({ titulo, conteudo, data });
+    organizarPorData(bd_concluidas)
+    salvarLocalStorage("bd_concluidas", bd_concluidas);
+    salvarLocalStorage("bd_pendentes", bd_pendentes)
+    esvaziaConteudo();
+    listarTarefas("listarPendentes")
 }
 
+function tornarPendente(indexTarefa) {
+    let arrayTarefaPendente = bd_concluidas.splice(indexTarefa, 1);
+    let objPendente = arrayTarefaPendente[0];
+    let titulo = objPendente.titulo;
+    let conteudo = objPendente.conteudo;
+    let data = objPendente.data;
+    bd_pendentes.push({ titulo, conteudo, data });
+    organizarPorData(bd_pendentes)
+    salvarLocalStorage("bd_pendentes", bd_pendentes)
+    salvarLocalStorage("bd_concluidas", bd_concluidas);
+    esvaziaConteudo();
+    listarTarefas("listarConcluidas")
+}
 
-// var teste = document.getElementsByClassName("cardTarefa")
-// var atributo = teste[1]
-// console.log(atributo.getAttribute("data-numtarefa"))
+function excluirTarefa(indexTarefa) {
 
+    if (tab1.checked) {
+        bd_pendentes.splice(indexTarefa, 1);
+        salvarLocalStorage("bd_pendentes", bd_pendentes);
+        esvaziaConteudo();
+        listarTarefas("listarPendentes");
+    }
 
-
-
-// var dadosPendentes = pegarLocalStorage("bd_pendentes");
-// for (i in dadosPendentes) {
-//     lista = dadosPendentes[i];
-//     // console.log(lista.titulo)
-//     if(lista.titulo == "teste 2"){
-//         console.log("if")
-//         console.log(i)
-//         console.log("ORIGINAL")
-//         console.log(bd_pendentes)
-//         console.log("ALTERADO")
-//         bd_pendentes.splice(i, 1)
-//         console.log(bd_pendentes)
-//         salvarLocalStorage("bd_pendentes", bd_pendentes);
-//         listarTarefas("listarPendentes");
-//     }
-//     else{
-
-//     }
+    else if (tab2) {
+        bd_concluidas.splice(indexTarefa, 1);
+        salvarLocalStorage("bd_concluidas", bd_concluidas);
+        esvaziaConteudo();
+        listarTarefas("listarConcluidas");
+    }
+}
 
 
 
@@ -196,6 +251,6 @@ janelaModal.addEventListener("click", fecharModal);
 
 function fecharModal(e) {
     if (e.target.id == "cancelar" || e.target.id == "janelaModal" || e.target.id == "salvar") {
-        janelaModal.classList.remove("abreModal")
+        janelaModal.classList.remove("abreModal");
     }
 }

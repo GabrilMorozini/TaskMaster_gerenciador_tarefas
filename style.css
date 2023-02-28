@@ -197,28 +197,28 @@ body {
     backdrop-filter: blur(5px);
 }
 
-.btnCancelar {
+#cancelar {
     background-color: rgba(255, 0, 0, 0.39);
 }
 
-.btnCancelar:hover {
+#cancelar:hover, #cancelar:active {
     background-color: rgb(233, 53, 53);
 }
 
-.btnSalvar {
+#salvar {
     background-color: rgba(20, 235, 92, 0.425);
 }
 
-.btnSalvar:hover {
+#salvar:hover, #salvar:active {
     background-color: rgb(44, 202, 97);
 }
 
-.btnLimpar {
+#limpar {
     background-color: rgba(255, 255, 0, 0.425);
 
 }
 
-.btnLimpar:hover {
+#limpar:hover, #limpar:active {
     background-color: rgb(255, 255, 0);
 }
 
