@@ -4,8 +4,13 @@ const bd_concluidas = pegarLocalStorage("bd_concluidas");
 const containerTarefa = document.getElementById("conteudoTarefa");
 
 const btnSalvar = document.getElementById("salvar");
-btnSalvar.addEventListener("click", criarTarefa);
-btnSalvar.addEventListener("click", salvaFechaModal);
+btnSalvar.addEventListener("click", valoresInputModal);
+
+const btnEditar = document.getElementById("msgTemporaria");
+
+const inputTituloTarefa = document.getElementById("txtTitulo");
+const inputDataTarefa = document.getElementById("dataTarefa");
+const txtConteudoTarefa = document.getElementById("txtTarefa");
 
 const tab1 = document.getElementById("tab1");
 tab1.addEventListener("click", identificaTabs);
@@ -13,6 +18,22 @@ tab1.addEventListener("click", identificaTabs);
 const tab2 = document.getElementById("tab2");
 tab2.addEventListener("click", identificaTabs);
 
+const inputData = document.querySelector('input[type="date"]');
+const dataAtual = new Date();
+const dia = dataAtual.getDate();
+const mes = dataAtual.getMonth() + 1;
+const ano = dataAtual.getFullYear();
+const dataMinima = `${ano}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia}`;
+inputData.setAttribute('min', dataMinima);
+
+const tituloModal = document.getElementById("tituloModal")
+var autorizaSalvar = false;
+var estaEditando =  false;
+
+// JANELA MODAL 
+const janelaModal = document.getElementById("janelaModal");
+const btnModal = document.getElementById("btnModal");
+const btnFechaModal = document.getElementById("cancelar");
 
 // LISTA AS TAREFAS PENDENTES ASSIM QUE A PÁGINA CARREGA
 listarTarefas("listarPendentes");
@@ -33,18 +54,46 @@ function esvaziaConteudo() {
 
 // CRIAR TAREFAS 
 function criarTarefa() {
-    valoresInputModal();
-    novaTarefa(addTituloTarefa, addConteudoTarefa, addDataTarefa);
+    if (estaEditando == true) {
+        excluirTarefa(numArrayTarefaEdit)
+    }
+    novaTarefa(contTitulo, contTarefa, contData);
     organizarPorData(bd_pendentes);
     salvarLocalStorage("bd_pendentes", bd_pendentes);
 }
 
 function valoresInputModal() {
-    addTituloTarefa = document.getElementById("txtTitulo").value;
+    let data = new Date();
+    let validacao = document.getElementById("validacao");
+    let validacaoData = document.getElementById("validacaoData");
 
-    addDataTarefa = document.getElementById("dataTarefa").value;
+    if (inputTituloTarefa.value == '' || inputDataTarefa.value == '' || txtConteudoTarefa.value == '') {
+        let validacao = document.getElementById("validacao");
+        validacao.classList.remove("dNone");
+        validacao.classList.add("dBlock");
+        validacaoData.classList.remove("dBlock");
+        validacaoData.classList.add("dNone");
+    }
 
-    addConteudoTarefa = document.getElementById("txtTarefa").value;
+    else if (inputDataTarefa.value < dataMinima) {
+        validacaoData.classList.remove("dNone");
+        validacaoData.classList.add("dBlock");
+        validacao.classList.remove("dBlock");
+        validacao.classList.add("dNone");
+    }
+
+    else {
+        validacao.classList.remove("dBlock");
+        validacao.classList.add("dNone");
+        validacaoData.classList.remove("dBlock");
+        validacaoData.classList.add("dNone");
+        contTitulo = inputTituloTarefa.value;
+        contData = inputDataTarefa.value;
+        contTarefa = txtConteudoTarefa.value;
+        criarTarefa();
+        autorizaSalvar = true;
+        salvarFechaModal();
+    }
 }
 
 function novaTarefa(titulo, conteudo, data) {
@@ -62,21 +111,15 @@ function organizarPorData(bd) {
     })
 }
 
-function salvaFechaModal() {
-    if (bd_pendentes.length == 1) {
-        window.location.reload();
+function salvarFechaModal() {
+    if (tab2.checked) {
+        esvaziaConteudo();
+        listarTarefas("listarConcluidas");
     }
 
     else {
-        if (tab2.checked) {
-            esvaziaConteudo();
-            listarTarefas("listarConcluidas");
-        }
-
-        else {
-            esvaziaConteudo();
-            listarTarefas("listarPendentes");
-        }
+        esvaziaConteudo();
+        listarTarefas("listarPendentes");
     }
 }
 
@@ -140,7 +183,8 @@ function marcarCheck() {
 function criarDivTarefas() {
     containerTarefa.innerHTML +=
         `<div class="cardTarefa">
-        <h4 class="mb-4" id="tituloCard">${lista.titulo}</h4>
+        <div id="editar" data-numtarefa="${numtarefa}"><i class="bi-pencil-square" id="iconEditar" data-numtarefa="${numtarefa}"></i></div>
+        <h4 class="mb-4 px-4" id="tituloCard">${lista.titulo}</h4>
         <p>${lista.conteudo}</p>
         <div class="opcoesCard" >
             <div class="form-check d-inline-block cursor">
@@ -148,7 +192,7 @@ function criarDivTarefas() {
                 <label for="concluida${numtarefa}" class="form-check-label cursor">Concluída</label>
             </div>
             <p class="d-inline-block cursor" id="excluir" data-numtarefa="${numtarefa}"><i class="bi-trash" id="iconExcluir"></i> Excluir</p>
-            <p id="data">${dataFormatada}</p>
+            <p id="data" title="escolha a cor">${dataFormatada}</p>
         </div>
     </div>`;
 }
@@ -178,6 +222,11 @@ function identificaTarefa(e) {
     else if (e.target.id == "excluir" || e.target.id == "iconExcluir") {
         numArrayTarefa = tarefaAlvo.dataset.numtarefa;
         excluirTarefa(numArrayTarefa);
+    }
+
+    else if (e.target.id == "editar" || e.target.id == "iconEditar") {
+        numArrayTarefaEdit = tarefaAlvo.dataset.numtarefa;
+        editarTarefa(numArrayTarefaEdit);
     }
 }
 
@@ -226,21 +275,42 @@ function excluirTarefa(indexTarefa) {
     }
 }
 
+function editarTarefa(indexTarefa) {
+    if (tab1.checked) {
+        funcaoEmExecucao = true;
+        dadosPendentes = pegarLocalStorage("bd_pendentes");
+        let tarefa = dadosPendentes[indexTarefa];
+        inputTituloTarefa.value = tarefa.titulo;
+        txtConteudoTarefa.value = tarefa.conteudo;
+        inputData.value = tarefa.data;
+        abrirModal("editando");
+        estaEditando = true;
+    } else {
+        btnEditar.style.opacity = 0;
+        btnEditar.classList.remove("dNone")
+        let opacidade = 0;
+        const intervalo = setInterval(function() {
+            if (opacidade >= 1) clearInterval(intervalo);
+            btnEditar.style.opacity = opacidade;
+            opacidade += 0.1;
+          }, 30);
 
-
-// JANELA MODAL 
-
-const janelaModal = document.getElementById("janelaModal");
-
-const btnModal = document.getElementById("btnModal");
-
-const btnFechaModal = document.getElementById("cancelar");
-
+        
+        setTimeout(function () {
+            btnEditar.classList.add("dNone");
+        }, 3000);
+    }
+}
 
 // ABRE A JANELA MODAL
 btnModal.addEventListener("click", abrirModal);
 
-function abrirModal() {
+function abrirModal(e) {
+    if (e == "editando") {
+        tituloModal.innerText = "EDITANDO UMA TAREFA..."
+    } else {
+        tituloModal.innerText = "ADICIONANDO UMA NOVA TAREFA..."
+    }
     janelaModal.classList.add("abreModal");
 };
 
@@ -250,7 +320,21 @@ btnFechaModal.addEventListener("click", fecharModal);
 janelaModal.addEventListener("click", fecharModal);
 
 function fecharModal(e) {
-    if (e.target.id == "cancelar" || e.target.id == "janelaModal" || e.target.id == "salvar") {
+    if (e.target.id == "cancelar" || autorizaSalvar == true) {
+        janelaModal.classList.remove("abreModal");
+        inputTituloTarefa.value = '';
+        inputDataTarefa.value = '';
+        txtConteudoTarefa.value = '';
+        autorizaSalvar = false;
+        estaEditando = false;
+        let validacao = document.getElementById("validacao");
+        validacao.classList.remove("dBlock");
+        validacao.classList.add("dNone");
+        validacaoData.classList.remove("dBlock");
+        validacaoData.classList.add("dNone");
+    }
+
+    else if (e.target.id == "janelaModal") {
         janelaModal.classList.remove("abreModal");
     }
 }
