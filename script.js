@@ -5,7 +5,7 @@ const containerTarefa = document.getElementById("conteudoTarefa");
 
 const alerta = document.getElementById("alerta")
 const btnAlerta = document.getElementById("btnAlerta");
-btnAlerta.addEventListener("click", function(){
+btnAlerta.addEventListener("click", function () {
     localStorage.setItem("nExibir", "true")
     alerta.classList.add("dNone")
 });
@@ -38,6 +38,7 @@ inputData.setAttribute('min', dataMinima);
 const tituloModal = document.getElementById("tituloModal")
 var autorizaSalvar = false;
 var estaEditando = false;
+var abriuEditar = false;
 
 // JANELA MODAL 
 const janelaModal = document.getElementById("janelaModal");
@@ -49,12 +50,12 @@ const exibiTitulo = document.getElementById("exibiTitulo");
 const exibiConteudo = document.getElementById("exibiConteudo");
 
 // VERIFICAR ALERTA
-window.onload = function() {
+window.onload = function () {
     var nExibir = localStorage.getItem("nExibir");
     if (nExibir === "true") {
-      alerta.classList.add("dNone")
+        alerta.classList.add("dNone")
     }
-  }
+}
 
 // LISTA AS TAREFAS PENDENTES ASSIM QUE A PÁGINA CARREGA
 listarTarefas("listarPendentes");
@@ -175,7 +176,7 @@ function listarTarefas(e) {
             cardTarefa[i].classList.add("cardConc");
             dataTarefa = document.querySelectorAll("#data");
             dataTarefa[i].classList.add("dataConc")
-            
+
         }
     }
 
@@ -229,7 +230,6 @@ function criarDivTarefas() {
             <p id="data" data-numtarefa="${numtarefa}">${dataFormatada}</p>
         </div>
     </div>`;
-
 }
 
 // IDENTIFICAÇÃO DAS TAREFAS E AÇÕES 
@@ -325,6 +325,7 @@ function editarTarefa(indexTarefa) {
         inputData.value = tarefa.data;
         abrirModal("editando");
         estaEditando = true;
+        abriuEditar = true;
     } else {
         btnEditar.style.opacity = 0;
         btnEditar.classList.remove("dNone")
@@ -338,7 +339,7 @@ function editarTarefa(indexTarefa) {
 
         setTimeout(function () {
             btnEditar.classList.add("dNone");
-        }, 3000);
+        }, 4000);
     }
 }
 
@@ -366,6 +367,12 @@ function abrirModal(e) {
         tituloModal.innerText = "EDITANDO UMA TAREFA..."
     } else {
         tituloModal.innerText = "ADICIONANDO UMA NOVA TAREFA..."
+        if (abriuEditar == true) {
+            inputTituloTarefa.value = '';
+            inputDataTarefa.value = '';
+            txtConteudoTarefa.value = '';
+            abriuEditar == false;
+        }
     }
     janelaModal.classList.add("abreModal");
 };
@@ -395,5 +402,6 @@ function fecharModal(e) {
     else if (e.target.id == "janelaModal" || e.target.id == "tarefaCompleta" || e.target.id == "fechar") {
         janelaModal.classList.remove("abreModal");
         tarefaCompleta.classList.remove("abreModal")
+        estaEditando = false;
     }
 }
