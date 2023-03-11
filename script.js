@@ -3,6 +3,13 @@ const bd_concluidas = pegarLocalStorage("bd_concluidas");
 
 const containerTarefa = document.getElementById("conteudoTarefa");
 
+const alerta = document.getElementById("alerta")
+const btnAlerta = document.getElementById("btnAlerta");
+btnAlerta.addEventListener("click", function(){
+    localStorage.setItem("nExibir", "true")
+    alerta.classList.add("dNone")
+});
+
 const btnSalvar = document.getElementById("salvar");
 btnSalvar.addEventListener("click", valoresInputModal);
 
@@ -18,6 +25,8 @@ tab1.addEventListener("click", identificaTabs);
 const tab2 = document.getElementById("tab2");
 tab2.addEventListener("click", identificaTabs);
 
+const cardTarefa = document.getElementsByClassName("cardTarefa");
+
 const inputData = document.querySelector('input[type="date"]');
 const dataAtual = new Date();
 const dia = dataAtual.getDate();
@@ -28,12 +37,24 @@ inputData.setAttribute('min', dataMinima);
 
 const tituloModal = document.getElementById("tituloModal")
 var autorizaSalvar = false;
-var estaEditando =  false;
+var estaEditando = false;
 
 // JANELA MODAL 
 const janelaModal = document.getElementById("janelaModal");
 const btnModal = document.getElementById("btnModal");
 const btnFechaModal = document.getElementById("cancelar");
+
+const tarefaCompleta = document.getElementById("tarefaCompleta");
+const exibiTitulo = document.getElementById("exibiTitulo");
+const exibiConteudo = document.getElementById("exibiConteudo");
+
+// VERIFICAR ALERTA
+window.onload = function() {
+    var nExibir = localStorage.getItem("nExibir");
+    if (nExibir === "true") {
+      alerta.classList.add("dNone")
+    }
+  }
 
 // LISTA AS TAREFAS PENDENTES ASSIM QUE A PÁGINA CARREGA
 listarTarefas("listarPendentes");
@@ -149,6 +170,13 @@ function listarTarefas(e) {
             criarDivTarefas();
             numtarefa++;
         }
+
+        for (i = 0; i < cardTarefa.length; i++) {
+            cardTarefa[i].classList.add("cardConc");
+            dataTarefa = document.querySelectorAll("#data");
+            dataTarefa[i].classList.add("dataConc")
+            
+        }
     }
 
     else {
@@ -161,8 +189,13 @@ function listarTarefas(e) {
             criarDivTarefas();
             numtarefa++;
         }
-    }
 
+        for (i = 0; i < cardTarefa.length; i++) {
+            cardTarefa[i].classList.add("cardPend")
+            dataTarefa = document.querySelectorAll("#data");
+            dataTarefa[i].classList.add("dataPend")
+        }
+    }
     marcarCheck()
 }
 
@@ -183,18 +216,20 @@ function marcarCheck() {
 function criarDivTarefas() {
     containerTarefa.innerHTML +=
         `<div class="cardTarefa">
-        <div id="editar" data-numtarefa="${numtarefa}"><i class="bi-pencil-square" id="iconEditar" data-numtarefa="${numtarefa}"></i></div>
+        <div id="editar" data-numtarefa="${numtarefa}"title="Editar tarefa" ><i class="bi-pencil-square" id="iconEditar" data-numtarefa="${numtarefa}"></i></div>
+        <div id="verMais" data-numtarefa="${numtarefa}" title="Visualizar tarefa completa"><i class="bi-box-arrow-up-left" id="iconVerMais" data-numtarefa="${numtarefa}"></i></div>
         <h4 class="mb-4 px-4" id="tituloCard">${lista.titulo}</h4>
         <p>${lista.conteudo}</p>
-        <div class="opcoesCard" >
+        <div class="opcoesCard">
             <div class="form-check d-inline-block cursor">
                 <input class="form-check-input cursor" id="concluida${numtarefa}" type="checkbox" data-numtarefa="${numtarefa}">
                 <label for="concluida${numtarefa}" class="form-check-label cursor">Concluída</label>
             </div>
             <p class="d-inline-block cursor" id="excluir" data-numtarefa="${numtarefa}"><i class="bi-trash" id="iconExcluir"></i> Excluir</p>
-            <p id="data" title="escolha a cor">${dataFormatada}</p>
+            <p id="data" data-numtarefa="${numtarefa}">${dataFormatada}</p>
         </div>
     </div>`;
+
 }
 
 // IDENTIFICAÇÃO DAS TAREFAS E AÇÕES 
@@ -227,6 +262,11 @@ function identificaTarefa(e) {
     else if (e.target.id == "editar" || e.target.id == "iconEditar") {
         numArrayTarefaEdit = tarefaAlvo.dataset.numtarefa;
         editarTarefa(numArrayTarefaEdit);
+    }
+
+    else if (e.target.id == "verMais" || e.target.id == "iconVerMais") {
+        numArrayTarefa = tarefaAlvo.dataset.numtarefa;
+        verMais(numArrayTarefa);
     }
 }
 
@@ -289,16 +329,32 @@ function editarTarefa(indexTarefa) {
         btnEditar.style.opacity = 0;
         btnEditar.classList.remove("dNone")
         let opacidade = 0;
-        const intervalo = setInterval(function() {
+        const intervalo = setInterval(function () {
             if (opacidade >= 1) clearInterval(intervalo);
             btnEditar.style.opacity = opacidade;
             opacidade += 0.1;
-          }, 30);
+        }, 30);
 
-        
+
         setTimeout(function () {
             btnEditar.classList.add("dNone");
         }, 3000);
+    }
+}
+
+function verMais(indexTarefa) {
+    tarefaCompleta.classList.add("abreModal")
+    if (tab1.checked) {
+        dadosPendentes = pegarLocalStorage("bd_pendentes");
+        let tarefa = dadosPendentes[indexTarefa];
+        exibiTitulo.innerText = tarefa.titulo;
+        exibiConteudo.innerText = tarefa.conteudo;
+
+    } else {
+        dadosConcluidas = pegarLocalStorage("bd_concluidas");
+        let tarefa = dadosConcluidas[indexTarefa];
+        exibiTitulo.innerText = tarefa.titulo;
+        exibiConteudo.innerText = tarefa.conteudo;
     }
 }
 
@@ -319,6 +375,8 @@ btnFechaModal.addEventListener("click", fecharModal);
 
 janelaModal.addEventListener("click", fecharModal);
 
+tarefaCompleta.addEventListener("click", fecharModal);
+
 function fecharModal(e) {
     if (e.target.id == "cancelar" || autorizaSalvar == true) {
         janelaModal.classList.remove("abreModal");
@@ -334,7 +392,8 @@ function fecharModal(e) {
         validacaoData.classList.add("dNone");
     }
 
-    else if (e.target.id == "janelaModal") {
+    else if (e.target.id == "janelaModal" || e.target.id == "tarefaCompleta" || e.target.id == "fechar") {
         janelaModal.classList.remove("abreModal");
+        tarefaCompleta.classList.remove("abreModal")
     }
 }
