@@ -89,7 +89,7 @@ function valoresInputModal() {
     let validacao = document.getElementById("validacao");
     let validacaoData = document.getElementById("validacaoData");
 
-    if (inputTituloTarefa.value == '' || inputDataTarefa.value == '' || txtConteudoTarefa.value == '') {
+    if (inputTituloTarefa.value == '' || inputDataTarefa.value == '' || txtConteudoTarefa.value == '' || /^\s*$/.test(inputTituloTarefa.value)  == true ||/^\s*$/.test(txtConteudoTarefa.value)  == true) {
         let validacao = document.getElementById("validacao");
         validacao.classList.remove("dNone");
         validacao.classList.add("dBlock");
@@ -219,8 +219,8 @@ function criarDivTarefas() {
         `<div class="cardTarefa">
         <div id="editar" data-numtarefa="${numtarefa}"title="Editar tarefa" ><i class="bi-pencil-square" id="iconEditar" data-numtarefa="${numtarefa}"></i></div>
         <div id="verMais" data-numtarefa="${numtarefa}" title="Visualizar tarefa completa"><i class="bi-box-arrow-up-left" id="iconVerMais" data-numtarefa="${numtarefa}"></i></div>
-        <h4 class="mb-4 px-4" id="tituloCard">${lista.titulo}</h4>
-        <p>${lista.conteudo}</p>
+        <h4 class="text-truncate mb-4 px-4" id="tituloCard">${lista.titulo}</h4>
+        <p id="txtCard" >${lista.conteudo}</p>
         <div class="opcoesCard">
             <div class="form-check d-inline-block cursor">
                 <input class="form-check-input cursor" id="concluida${numtarefa}" type="checkbox" data-numtarefa="${numtarefa}">
@@ -371,7 +371,7 @@ function abrirModal(e) {
             inputTituloTarefa.value = '';
             inputDataTarefa.value = '';
             txtConteudoTarefa.value = '';
-            abriuEditar == false;
+            abriuEditar = false;
         }
     }
     janelaModal.classList.add("abreModal");
