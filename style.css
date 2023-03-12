@@ -8,7 +8,6 @@ body {
 }
 
 /* ----------- CABEÇALHO ----------- */
-
 .cabecalho {
     font-family: 'Tilt Warp', cursive;
     width: 100vw;
@@ -52,9 +51,7 @@ body {
     font-weight: 700;
 }
 
-
 /* ----------- TABS ----------- */
-
 .navTabs {
     margin-top: 20px;
     display: grid;
@@ -117,7 +114,6 @@ body {
 }
 
 /* ----------- CARDS TAREFAS ----------- */
-
 .containerRolagem {
     height: calc(100vh - 200px);
     overflow-y: scroll;
@@ -136,7 +132,6 @@ body {
     gap: 10px;
 }
 
-
 .cardTarefa {
     background-color: white;
     margin: 10px;
@@ -150,7 +145,7 @@ body {
     animation-name: cardTarefa;
     animation-duration: .8s;
     animation-fill-mode: forwards;
-}
+} 
 
 .cardPend {
     border-left: 6px solid rgb(204, 204, 0);
@@ -172,6 +167,10 @@ body {
     font-family: 'Roboto Mono', monospace;
     margin-bottom: 60px;
 }
+
+#txtTarefa, #txtCard  {
+    white-space: pre-wrap;
+} 
 
 #editar {
     position: absolute;
@@ -248,9 +247,7 @@ body {
     color: white;
 } 
 
-
 /* ----------- JANELA MODAL ----------- */
-
 .janelaModal {
     font-family: 'Roboto Mono', monospace;
     width: 100vw;
@@ -323,7 +320,6 @@ body {
 
 #limpar {
     background-color: rgba(255, 255, 0, 0.425);
-
 }
 
 #limpar:hover,
@@ -349,7 +345,6 @@ body {
 }
 
 /* ----------- REPONSIVIDADE ----------- */
-
 @media screen and (max-width: 1200px) {
     .conteudo {
         grid-template-columns: 1fr 1fr;
@@ -441,9 +436,3 @@ body {
         transform: translate(0, 0);
     }
 }
-
-
-
-#txtTarefa, #txtCard  {
-    white-space: pre-wrap;
-}  

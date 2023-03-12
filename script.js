@@ -1,32 +1,26 @@
 const bd_pendentes = pegarLocalStorage("bd_pendentes");
 const bd_concluidas = pegarLocalStorage("bd_concluidas");
 
-const containerTarefa = document.getElementById("conteudoTarefa");
-
-const alerta = document.getElementById("alerta")
+// ALERTA
+const alerta = document.getElementById("alerta");
 const btnAlerta = document.getElementById("btnAlerta");
 btnAlerta.addEventListener("click", function () {
-    localStorage.setItem("nExibir", "true")
-    alerta.classList.add("dNone")
+    localStorage.setItem("nExibir", "true");
+    alerta.classList.add("dNone");
 });
 
-const btnSalvar = document.getElementById("salvar");
-btnSalvar.addEventListener("click", valoresInputModal);
-
-const btnEditar = document.getElementById("msgTemporaria");
-
-const inputTituloTarefa = document.getElementById("txtTitulo");
-const inputDataTarefa = document.getElementById("dataTarefa");
-const txtConteudoTarefa = document.getElementById("txtTarefa");
-
+// CONTEUDO E CARDS TAREFAS
 const tab1 = document.getElementById("tab1");
 tab1.addEventListener("click", identificaTabs);
 
 const tab2 = document.getElementById("tab2");
 tab2.addEventListener("click", identificaTabs);
 
+const containerTarefa = document.getElementById("conteudoTarefa");
 const cardTarefa = document.getElementsByClassName("cardTarefa");
+const btnEditar = document.getElementById("msgTemporaria");
 
+// CONTROLE DE DATAS 
 const inputData = document.querySelector('input[type="date"]');
 const dataAtual = new Date();
 const dia = dataAtual.getDate();
@@ -35,15 +29,22 @@ const ano = dataAtual.getFullYear();
 const dataMinima = `${ano}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia}`;
 inputData.setAttribute('min', dataMinima);
 
-const tituloModal = document.getElementById("tituloModal")
+// VARIAVEIS DE CONTROLE 
 var autorizaSalvar = false;
 var estaEditando = false;
 var abriuEditar = false;
 
 // JANELA MODAL 
+const tituloModal = document.getElementById("tituloModal");
 const janelaModal = document.getElementById("janelaModal");
 const btnModal = document.getElementById("btnModal");
 const btnFechaModal = document.getElementById("cancelar");
+const btnSalvar = document.getElementById("salvar");
+btnSalvar.addEventListener("click", valoresInputModal);
+
+const inputTituloTarefa = document.getElementById("txtTitulo");
+const inputDataTarefa = document.getElementById("dataTarefa");
+const txtConteudoTarefa = document.getElementById("txtTarefa");
 
 const tarefaCompleta = document.getElementById("tarefaCompleta");
 const exibiTitulo = document.getElementById("exibiTitulo");
@@ -53,7 +54,7 @@ const exibiConteudo = document.getElementById("exibiConteudo");
 window.onload = function () {
     var nExibir = localStorage.getItem("nExibir");
     if (nExibir === "true") {
-        alerta.classList.add("dNone")
+        alerta.classList.add("dNone");
     }
 }
 
@@ -77,7 +78,7 @@ function esvaziaConteudo() {
 // CRIAR TAREFAS 
 function criarTarefa() {
     if (estaEditando == true) {
-        excluirTarefa(numArrayTarefaEdit)
+        excluirTarefa(numArrayTarefaEdit);
     }
     novaTarefa(contTitulo, contTarefa, contData);
     organizarPorData(bd_pendentes);
@@ -89,22 +90,18 @@ function valoresInputModal() {
     let validacao = document.getElementById("validacao");
     let validacaoData = document.getElementById("validacaoData");
 
-    if (inputTituloTarefa.value == '' || inputDataTarefa.value == '' || txtConteudoTarefa.value == '' || /^\s*$/.test(inputTituloTarefa.value)  == true ||/^\s*$/.test(txtConteudoTarefa.value)  == true) {
+    if(inputTituloTarefa.value == '' || inputDataTarefa.value == '' || txtConteudoTarefa.value == '' || /^\s*$/.test(inputTituloTarefa.value)  == true ||/^\s*$/.test(txtConteudoTarefa.value)  == true) {
         let validacao = document.getElementById("validacao");
         validacao.classList.remove("dNone");
         validacao.classList.add("dBlock");
         validacaoData.classList.remove("dBlock");
         validacaoData.classList.add("dNone");
-    }
-
-    else if (inputDataTarefa.value < dataMinima) {
+    }else if (inputDataTarefa.value < dataMinima) {
         validacaoData.classList.remove("dNone");
         validacaoData.classList.add("dBlock");
         validacao.classList.remove("dBlock");
         validacao.classList.add("dNone");
-    }
-
-    else {
+    }else {
         validacao.classList.remove("dBlock");
         validacao.classList.add("dNone");
         validacaoData.classList.remove("dBlock");
@@ -126,8 +123,7 @@ function organizarPorData(bd) {
     bd.sort(function (a, b) {
         if (a.data < b.data) {
             return -1;
-        }
-        else {
+        }else {
             return true;
         }
     })
@@ -137,9 +133,7 @@ function salvarFechaModal() {
     if (tab2.checked) {
         esvaziaConteudo();
         listarTarefas("listarConcluidas");
-    }
-
-    else {
+    }else {
         esvaziaConteudo();
         listarTarefas("listarPendentes");
     }
@@ -148,16 +142,12 @@ function salvarFechaModal() {
 // IDENTIFICA QUAL TAB ESTA SELECIONADA 
 function identificaTabs(e) {
     esvaziaConteudo();
-
     if (e.target.id == "tab2") {
         listarTarefas("listarConcluidas");
-    }
-
-    else {
+    }else {
         listarTarefas("listarPendentes");
     }
 }
-
 
 // LISTAR TAREFAS
 function listarTarefas(e) {
@@ -171,16 +161,12 @@ function listarTarefas(e) {
             criarDivTarefas();
             numtarefa++;
         }
-
         for (i = 0; i < cardTarefa.length; i++) {
             cardTarefa[i].classList.add("cardConc");
             dataTarefa = document.querySelectorAll("#data");
-            dataTarefa[i].classList.add("dataConc")
-
+            dataTarefa[i].classList.add("dataConc");
         }
-    }
-
-    else {
+    }else {
         let dadosPendentes = pegarLocalStorage("bd_pendentes");
         numtarefa = 0;
         for (i in dadosPendentes) {
@@ -190,14 +176,13 @@ function listarTarefas(e) {
             criarDivTarefas();
             numtarefa++;
         }
-
         for (i = 0; i < cardTarefa.length; i++) {
-            cardTarefa[i].classList.add("cardPend")
+            cardTarefa[i].classList.add("cardPend");
             dataTarefa = document.querySelectorAll("#data");
-            dataTarefa[i].classList.add("dataPend")
+            dataTarefa[i].classList.add("dataPend");
         }
     }
-    marcarCheck()
+    marcarCheck();
 }
 
 function marcarCheck() {
@@ -206,8 +191,7 @@ function marcarCheck() {
             let marcarCheck = document.getElementById(`concluida${i}`);
             try {
                 marcarCheck.checked = true;
-            }
-            catch (err) {
+            } catch (err) {
 
             }
         }
@@ -236,35 +220,27 @@ function criarDivTarefas() {
 try {
     const identTarefa = document.getElementById("conteudoTarefa");
     identTarefa.addEventListener("click", identificaTarefa);
-}
-catch (err) {
+} catch (err) {
 
 }
 
 function identificaTarefa(e) {
     let tarefaAlvo = e.target;
-
     if (e.target.tagName == "INPUT") {
         if (e.target.checked) {
             numArrayTarefa = tarefaAlvo.dataset.numtarefa;
             concluirTarefa(numArrayTarefa);
-        }
-        else {
+        }else {
             numArrayTarefa = tarefaAlvo.dataset.numtarefa;
             tornarPendente(numArrayTarefa);
         }
-    }
-    else if (e.target.id == "excluir" || e.target.id == "iconExcluir") {
+    }else if (e.target.id == "excluir" || e.target.id == "iconExcluir") {
         numArrayTarefa = tarefaAlvo.dataset.numtarefa;
         excluirTarefa(numArrayTarefa);
-    }
-
-    else if (e.target.id == "editar" || e.target.id == "iconEditar") {
+    }else if (e.target.id == "editar" || e.target.id == "iconEditar") {
         numArrayTarefaEdit = tarefaAlvo.dataset.numtarefa;
         editarTarefa(numArrayTarefaEdit);
-    }
-
-    else if (e.target.id == "verMais" || e.target.id == "iconVerMais") {
+    }else if (e.target.id == "verMais" || e.target.id == "iconVerMais") {
         numArrayTarefa = tarefaAlvo.dataset.numtarefa;
         verMais(numArrayTarefa);
     }
@@ -277,11 +253,11 @@ function concluirTarefa(indexTarefa) {
     let conteudo = objConcluido.conteudo;
     let data = objConcluido.data;
     bd_concluidas.push({ titulo, conteudo, data });
-    organizarPorData(bd_concluidas)
+    organizarPorData(bd_concluidas);
     salvarLocalStorage("bd_concluidas", bd_concluidas);
-    salvarLocalStorage("bd_pendentes", bd_pendentes)
+    salvarLocalStorage("bd_pendentes", bd_pendentes);
     esvaziaConteudo();
-    listarTarefas("listarPendentes")
+    listarTarefas("listarPendentes");
 }
 
 function tornarPendente(indexTarefa) {
@@ -291,23 +267,20 @@ function tornarPendente(indexTarefa) {
     let conteudo = objPendente.conteudo;
     let data = objPendente.data;
     bd_pendentes.push({ titulo, conteudo, data });
-    organizarPorData(bd_pendentes)
-    salvarLocalStorage("bd_pendentes", bd_pendentes)
+    organizarPorData(bd_pendentes);
+    salvarLocalStorage("bd_pendentes", bd_pendentes);
     salvarLocalStorage("bd_concluidas", bd_concluidas);
     esvaziaConteudo();
-    listarTarefas("listarConcluidas")
+    listarTarefas("listarConcluidas");
 }
 
 function excluirTarefa(indexTarefa) {
-
     if (tab1.checked) {
         bd_pendentes.splice(indexTarefa, 1);
         salvarLocalStorage("bd_pendentes", bd_pendentes);
         esvaziaConteudo();
         listarTarefas("listarPendentes");
-    }
-
-    else if (tab2) {
+    }else if (tab2) {
         bd_concluidas.splice(indexTarefa, 1);
         salvarLocalStorage("bd_concluidas", bd_concluidas);
         esvaziaConteudo();
@@ -334,9 +307,7 @@ function editarTarefa(indexTarefa) {
             if (opacidade >= 1) clearInterval(intervalo);
             btnEditar.style.opacity = opacidade;
             opacidade += 0.1;
-        }, 30);
-
-
+            }, 30);
         setTimeout(function () {
             btnEditar.classList.add("dNone");
         }, 4000);
@@ -350,7 +321,6 @@ function verMais(indexTarefa) {
         let tarefa = dadosPendentes[indexTarefa];
         exibiTitulo.innerText = tarefa.titulo;
         exibiConteudo.innerText = tarefa.conteudo;
-
     } else {
         dadosConcluidas = pegarLocalStorage("bd_concluidas");
         let tarefa = dadosConcluidas[indexTarefa];
@@ -379,9 +349,7 @@ function abrirModal(e) {
 
 // FECHA A JANELA MODAL
 btnFechaModal.addEventListener("click", fecharModal);
-
 janelaModal.addEventListener("click", fecharModal);
-
 tarefaCompleta.addEventListener("click", fecharModal);
 
 function fecharModal(e) {
@@ -397,9 +365,7 @@ function fecharModal(e) {
         validacao.classList.add("dNone");
         validacaoData.classList.remove("dBlock");
         validacaoData.classList.add("dNone");
-    }
-
-    else if (e.target.id == "janelaModal" || e.target.id == "tarefaCompleta" || e.target.id == "fechar") {
+    }else if (e.target.id == "janelaModal" || e.target.id == "tarefaCompleta" || e.target.id == "fechar") {
         janelaModal.classList.remove("abreModal");
         tarefaCompleta.classList.remove("abreModal")
         estaEditando = false;
