@@ -390,7 +390,7 @@ body {
 
     .cardTarefa {
         height: 130px;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
     }
 
     .cardTarefa h4 {
@@ -403,7 +403,7 @@ body {
     }
 
     .containerRolagem {
-        height: calc(100vh - 170px);
+        height: calc(100vh - 200px);
         overflow-y: scroll;
     }
 }
