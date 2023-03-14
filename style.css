@@ -401,11 +401,6 @@ body {
         height: 30px;
         margin-bottom: 0;
     }
-
-    .containerRolagem {
-        height: calc(100vh - 200px);
-        overflow-y: scroll;
-    }
 }
 
 /* ANIMAÇÕES */
