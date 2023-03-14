@@ -25,7 +25,7 @@ Com todas essas funcionalidades, o TaskMaster se torna uma ferramenta poderosa p
 <br>
 
 ## ✒️ Licença
-Esse projeto está sob licença MIT. Leia o arquivo <a href="./" >LICENSE</a> para mais detalhes. 
+Esse projeto está sob licença MIT. Leia o arquivo <a href="./license" >LICENSE</a> para mais detalhes. 
 
 <br><br>
 
