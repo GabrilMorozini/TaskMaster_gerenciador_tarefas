@@ -15,16 +15,12 @@ Com todas essas funcionalidades, o TaskMaster se torna uma ferramenta poderosa p
 
 OBS.: Os dados são todos armazenados no localStorage 
 
-<br>
-
 ## 🖥️ Tecnologias utilizadas
 
 * HTML
 * CSS
 * JavaScript
 * BootStrap
-
-<br>
 
 ## ✒️ Licença
 Esse projeto está sob licença MIT. Leia o arquivo <a href="./license" >LICENSE</a> para mais detalhes. 
