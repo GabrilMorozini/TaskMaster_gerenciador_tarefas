@@ -13,6 +13,8 @@ Além disso, uma das funcionalidades mais interessantes é a possibilidade de ma
 
 Com todas essas funcionalidades, o TaskMaster se torna uma ferramenta poderosa para ajudar a manter as atividades diárias organizadas e realizadas no prazo certo, tornando-se uma aliada importante para aumentar a produtividade e o sucesso nas tarefas do dia a dia. 
 
+OBS.: Os dados são todos armazenados no localStorage 
+
 <br>
 
 ## 🖥️ Tecnologias utilizadas
